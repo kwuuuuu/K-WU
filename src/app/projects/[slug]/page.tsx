@@ -3,11 +3,7 @@ import Image from "next/image";
 import { fetchSanityData, urlFor } from "@/lib/sanity";
 import BackToTopButton from "@/components/BackToTopButton";
 
-interface ProjectPageProps {
-  params: { slug: string };
-}
-
-export default async function ProjectPage({ params }: ProjectPageProps) {
+export default async function ProjectPage({ params }: { params: { slug: string } }) {
   const data = await fetchSanityData<any>(
     `*[_type == "project" && slug.current == "${params.slug}"][0]{
       title,
@@ -44,27 +40,26 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </div>
 
-{/* Images */}
-<div className="flex flex-col">
-  {images.map((img: any, i: number) => (
-    <div
-      key={img.asset._id}
-      className="w-full px-[0.5rem] md:px-0 md:ml-[0.5rem] max-w-[2580px]"
-    >
-      <div className="relative w-full h-auto py-[0.25rem]">
-        <Image
-          src={urlFor(img.asset).url()}
-          alt={`Project image ${i + 1}`}
-          width={img.asset.metadata.dimensions.width}
-          height={img.asset.metadata.dimensions.height}
-          quality={100}
-          className="w-full h-auto object-contain object-left max-h-[130vh]"
-        />
+      {/* Images */}
+      <div className="flex flex-col">
+        {images.map((img: any, i: number) => (
+          <div
+            key={img.asset._id}
+            className="w-full px-[0.5rem] md:px-0 md:ml-[0.5rem] max-w-[2580px]"
+          >
+            <div className="relative w-full h-auto py-[0.25rem]">
+              <Image
+                src={urlFor(img.asset).url()}
+                alt={`Project image ${i + 1}`}
+                width={img.asset.metadata.dimensions.width}
+                height={img.asset.metadata.dimensions.height}
+                quality={100}
+                className="w-full h-auto object-contain object-left max-h-[130vh]"
+              />
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
-
 
       {/* Metadata */}
       <div className="mt-[6rem] mb-[8rem] grid grid-cols-[auto_1fr] gap-x-[3rem] gap-y-[0.5rem]">
@@ -99,6 +94,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </>
         )}
       </div>
+
       <BackToTopButton />
     </div>
   );
