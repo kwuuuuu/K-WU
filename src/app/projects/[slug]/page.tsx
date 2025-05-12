@@ -1,18 +1,18 @@
 // src/app/projects/[slug]/page.tsx
-import { notFound } from "next/navigation"
-import Image from "next/image"
-import { fetchSanityData, urlFor } from "@/lib/sanity"
-import BackToTopButton from "@/components/BackToTopButton"
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { fetchSanityData, urlFor } from "@/lib/sanity";
+import BackToTopButton from "@/components/BackToTopButton";
 
-export default async function ProjectPage({
-  params,
-  searchParams,        // ← add this
-}: {
-  params: { slug: string }
-  searchParams: Record<string, string | string[] | undefined>
-}) {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function ProjectPage(props: Props) {
+  const { slug } = await props.params;
+
   const data = await fetchSanityData<any>(
-    `*[_type == "project" && slug.current == "${params.slug}"][0]{
+    `*[_type == "project" && slug.current == "${slug}"][0]{
       title,
       story,
       type,
@@ -22,8 +22,8 @@ export default async function ProjectPage({
       scale,
       images[]{asset->{_id, url, metadata}}
     }`
-  )
-  if (!data) return notFound()
+  );
+  if (!data) return notFound();
 
   const {
     title,
@@ -38,64 +38,61 @@ export default async function ProjectPage({
 
   return (
     <div className="w-full px-[0.5rem] md:px-[2rem]">
-      {/* Title + Story */}
       <div className="pt-[1rem] pb-[6rem]">
-        <p>{title}</p>
+        <p className="font-normal">{title}</p>
         <div className="mt-[0.5rem] whitespace-pre-line leading-[1.2]">
           {story}
         </div>
       </div>
 
-      {/* Images */}
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-[0.5rem]">
         {images.map((img: any, i: number) => (
           <div
             key={img.asset._id}
-            className="w-full px-[0.5rem] md:px-0 md:ml-[0.5rem] max-w-[2580px]"
+            className="w-full"
+            style={{ minHeight: "80vh" }}
           >
-            <div className="relative w-full h-auto py-[0.25rem]">
-              <Image
-                src={urlFor(img.asset).url()}
-                alt={`Project image ${i + 1}`}
-                width={img.asset.metadata.dimensions.width}
-                height={img.asset.metadata.dimensions.height}
-                quality={100}
-                className="w-full h-auto object-contain object-left max-h-[130vh]"
-              />
-            </div>
+            <Image
+              src={urlFor(img.asset).url()}
+              alt={`Project image ${i + 1}`}
+              width={img.asset.metadata.dimensions.width}
+              height={img.asset.metadata.dimensions.height}
+              className="w-full h-auto object-contain"
+              quality={100}
+              priority
+            />
           </div>
         ))}
       </div>
 
-      {/* Metadata */}
       <div className="mt-[6rem] mb-[8rem] grid grid-cols-[auto_1fr] gap-x-[3rem] gap-y-[0.5rem]">
         {year && (
           <>
-            <span>Year</span>
+            <span className="font-normal">Year</span>
             <span>{year}</span>
           </>
         )}
         {type && (
           <>
-            <span>Type</span>
+            <span className="font-normal">Type</span>
             <span>{type}</span>
           </>
         )}
         {scale && (
           <>
-            <span>Scale</span>
+            <span className="font-normal">Scale</span>
             <span>{scale}</span>
           </>
         )}
         {location && (
           <>
-            <span>Location</span>
+            <span className="font-normal">Location</span>
             <span>{location}</span>
           </>
         )}
         {photographer && (
           <>
-            <span>Photography</span>
+            <span className="font-normal">Photography</span>
             <span>{photographer}</span>
           </>
         )}
