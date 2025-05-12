@@ -3,12 +3,11 @@ import Image from "next/image";
 import { fetchSanityData, urlFor } from "@/lib/sanity";
 import BackToTopButton from "@/components/BackToTopButton";
 
-export default async function ProjectPage({
-  params,
-}: {
+interface ProjectPageProps {
   params: { slug: string };
-}) {
+}
 
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const data = await fetchSanityData<any>(
     `*[_type == "project" && slug.current == "${params.slug}"][0]{
       title,
@@ -40,9 +39,7 @@ export default async function ProjectPage({
       {/* Title + Story */}
       <div className="pt-[1rem] pb-[6rem]">
         <p>{title}</p>
-        <div className="mt-[0.5rem] whitespace-pre-line leading-[1.2]">
-          {story}
-        </div>
+        <div className="mt-[0.5rem] whitespace-pre-line leading-[1.2]">{story}</div>
       </div>
 
       {/* Images */}
@@ -104,4 +101,3 @@ export default async function ProjectPage({
     </div>
   );
 }
-
