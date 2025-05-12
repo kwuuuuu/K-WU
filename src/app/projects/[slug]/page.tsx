@@ -1,14 +1,16 @@
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { fetchSanityData, urlFor } from "@/lib/sanity";
-import BackToTopButton from "@/components/BackToTopButton";
+// src/app/projects/[slug]/page.tsx
+import { notFound } from "next/navigation"
+import Image from "next/image"
+import { fetchSanityData, urlFor } from "@/lib/sanity"
+import BackToTopButton from "@/components/BackToTopButton"
+
 export default async function ProjectPage({
   params,
+  searchParams,        // ← add this
 }: {
-  params: { slug: string };
+  params: { slug: string }
+  searchParams: Record<string, string | string[] | undefined>
 }) {
-
-
   const data = await fetchSanityData<any>(
     `*[_type == "project" && slug.current == "${params.slug}"][0]{
       title,
@@ -20,9 +22,8 @@ export default async function ProjectPage({
       scale,
       images[]{asset->{_id, url, metadata}}
     }`
-  );
-
-  if (!data) return notFound();
+  )
+  if (!data) return notFound()
 
   const {
     title,
