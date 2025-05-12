@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { fetchSanityData, urlFor } from "@/lib/sanity";
 import BackToTopButton from "@/components/BackToTopButton";
-import type { PageProps } from "next";
+export default async function ProjectPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
 
-export default async function ProjectPage({ params }: PageProps) {
 
   const data = await fetchSanityData<any>(
     `*[_type == "project" && slug.current == "${params.slug}"][0]{
