@@ -30,7 +30,7 @@ export default async function ProjectsIndex() {
 
   return (
     <div className="w-full px-[0.5rem] md:px-[2rem]">
-      <div className="grid grid-cols-12 gap-y-[4rem] pt-[2rem] pb-[20rem]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[4rem] gap-y-[4rem] pt-[2rem] pb-[20rem]">
         {data.projects.map((project) => {
           const firstImage = project.images?.[0]?.asset;
           const imageUrl = firstImage ? urlFor(firstImage).url() : null;
@@ -39,7 +39,7 @@ export default async function ProjectsIndex() {
             <Link
               key={project._id}
               href={`/projects/${project.slug.current}`}
-              className="col-span-12 md:col-span-6 lg:col-span-4 block max-w-[450px]"
+              className="block max-w-[450px]"
             >
               <div className="w-full">
                 {imageUrl && (
